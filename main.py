@@ -22,7 +22,7 @@ class Visualizer(object):
         indices:
             path: The path of a layer
             type: "csv" or "shapes"
-            extents: tuple of size 4, containing min_x, min_y, max_x, max_y
+            extents: array of size 4, containing min_x, min_y, max_x, max_y
         """
         self.layers = []
 
@@ -57,7 +57,7 @@ class Visualizer(object):
         {
             "path": the shapefile's path
             "type": "shapes",
-            "extents": tuple of size 4, containing min_x, min_y, max_x, max_y
+            "extents": array of size 4, containing min_x, min_y, max_x, max_y
             "shapes": [
                 {
                     "shape": object produced by shapely.geometry.shape
@@ -92,7 +92,7 @@ class Visualizer(object):
                                 layer["extents"][i], bounds[i]
                             ])
                     else:
-                        layer["extents"] = bounds
+                        layer["extents"] = list(bounds)
 
                     shapes.append({
                         "shape": shape,
@@ -210,12 +210,12 @@ class Visualizer(object):
         print("")
 
         layer["kwargs"] = kwargs
-        layer["extents"] = (
+        layer["extents"] = [
             min(kwargs["x"]),
             min(kwargs["y"]),
             max(kwargs["x"]),
             max(kwargs["y"])
-        )
+        ]
         self.layers.append(layer)
 
     def render(self):
@@ -279,7 +279,7 @@ class Visualizer(object):
 
         for layer in self.layers:
             if (layer["path"] == path):
-                self.axis.se_extent(layer["extents"])
+                self.axis.set_extent(layer["extents"])
                 break
 
     def show(self):
